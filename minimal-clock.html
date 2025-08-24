@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Square Clock</title>
+<style>
+  body {
+    margin: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  canvas {
+    background: #2e3440; /* Square background */
+  }
+</style>
+</head>
+<body>
+<canvas id="watch" width="120" height="120"></canvas>
+<script>
+const canvas = document.getElementById("watch");
+const ctx = canvas.getContext("2d");
+const center = canvas.width / 2;
+
+function drawClock() {
+  const now = new Date();
+  const h = now.getHours() % 12;
+  const m = now.getMinutes();
+
+  // Clear the square (but keep background)
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#2e3440";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw hour hand
+  drawHand((h + m/60) / 12, 30, 8, "#d8dee9"); // short + thick
+
+  // Draw minute hand
+  drawHand(m / 60, 45, 6, "#5e81ac"); // long + thick
+}
+
+function drawHand(position, length, width, color) {
+  const angle = (Math.PI * 2 * position) - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(center, center);
+  ctx.lineTo(center + Math.cos(angle) * length, center + Math.sin(angle) * length);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.stroke();
+}
+
+setInterval(drawClock, 1000);
+drawClock();
+</script>
+</body>
+</html>
+
